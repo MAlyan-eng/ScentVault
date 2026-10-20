@@ -1,0 +1,41 @@
+
+name: Build ScentVault APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "ScentVaultProject.zip"
+      - ".github/workflows/android.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Unpack ScentVault project
+        run: |
+          unzip ScentVaultProject.zip -d project
+
+      - name: Build debug APK
+        run: gradle -p project assembleDebug
+
+      - name: Save APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ScentVault-debug-APK
+          path: project/app/build/outputs/apk/debug/app-debug.apk
