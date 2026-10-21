@@ -31,8 +31,11 @@ jobs:
         run: |
           unzip ScentVaultProject.zip -d project
 
-      - name: Build debug APK
-        run: gradle -p project assembleDebug
+            - name: Build debug APK
+        working-directory: project
+        run: gradle assembleDebug
+
+        
 
       - name: Save APK
         uses: actions/upload-artifact@v4
